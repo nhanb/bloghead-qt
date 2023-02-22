@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "bloghead"
+version = "0.1.0"
+description = ""
+authors = ["Nhân <hi@imnhan.com>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.10"
+pyside2 = "^5.15.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
