@@ -17,70 +17,228 @@
    <string/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1,0">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
     <item>
      <layout class="QHBoxLayout" name="mainUI" stretch="0,1">
       <item>
-       <widget class="QTreeWidget" name="navigationTree">
-        <property name="allColumnsShowFocus">
-         <bool>false</bool>
-        </property>
-        <property name="headerHidden">
-         <bool>true</bool>
-        </property>
-        <property name="columnCount">
-         <number>1</number>
-        </property>
-        <column>
-         <property name="text">
-          <string notr="true">1</string>
-         </property>
-        </column>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <property name="text">
-          <string>Pages</string>
-         </property>
-         <item>
-          <property name="text">
-           <string>About</string>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Articles</string>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Projects</string>
-          </property>
-         </item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QTreeWidget" name="navigationTree">
+             <property name="allColumnsShowFocus">
+              <bool>false</bool>
+             </property>
+             <property name="headerHidden">
+              <bool>true</bool>
+             </property>
+             <property name="columnCount">
+              <number>1</number>
+             </property>
+             <column>
+              <property name="text">
+               <string notr="true">1</string>
+              </property>
+             </column>
+             <item>
+              <property name="text">
+               <string>Pages</string>
+              </property>
+              <property name="icon">
+               <iconset theme="folder">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+              <item>
+               <property name="text">
+                <string>About</string>
+               </property>
+               <property name="icon">
+                <iconset theme="unknown">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Projects</string>
+               </property>
+               <property name="icon">
+                <iconset theme="unknown">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+             </item>
+             <item>
+              <property name="text">
+               <string>Posts</string>
+              </property>
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="icon">
+               <iconset theme="folder">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+              <item>
+               <property name="text">
+                <string>A whole new world</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <italic>false</italic>
+                 <bold>true</bold>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="icon">
+                <iconset theme="document-edit-sign">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Blogging considered harmful</string>
+               </property>
+               <property name="font">
+                <font>
+                 <underline>false</underline>
+                </font>
+               </property>
+               <property name="icon">
+                <iconset theme="unknown">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>I don't even know what I'm doing anymore</string>
+               </property>
+               <property name="icon">
+                <iconset theme="unknown">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Hello people</string>
+               </property>
+               <property name="icon">
+                <iconset theme="unknown">
+                 <normaloff>.</normaloff>.</iconset>
+               </property>
+              </item>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
         <item>
-         <property name="text">
-          <string>Posts</string>
-         </property>
-         <item>
+         <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>A whole new world</string>
+           <string>Article's uploaded files:</string>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Blogging considered harmful</string>
-          </property>
-          <property name="icon">
-           <iconset theme="document-new">
-            <normaloff>.</normaloff>.</iconset>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>I don't even know what I'm doing anymore</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Hello people</string>
-          </property>
-         </item>
+         </widget>
         </item>
-       </widget>
+        <item>
+         <widget class="QListWidget" name="attachmentsList">
+          <property name="toolTip">
+           <string/>
+          </property>
+          <item>
+           <property name="text">
+            <string>thumbnail.jpg</string>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to insert into article</string>
+           </property>
+           <property name="icon">
+            <iconset theme="image-x-generic">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>some-file.mod</string>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to insert into article</string>
+           </property>
+           <property name="icon">
+            <iconset theme="unknown">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>fail.mp3</string>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to insert into article</string>
+           </property>
+           <property name="icon">
+            <iconset theme="audio-x-generic">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>demo.png</string>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to insert into article</string>
+           </property>
+           <property name="icon">
+            <iconset theme="image-x-generic">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>screencast.webm</string>
+           </property>
+           <property name="toolTip">
+            <string>Double-click to insert into article</string>
+           </property>
+           <property name="icon">
+            <iconset theme="video-x-generic">
+             <normaloff>.</normaloff>.</iconset>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_6">
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_3">
+            <property name="text">
+             <string>&amp;Upload...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QFrame" name="editor">
@@ -148,30 +306,45 @@
          <item>
           <layout class="QVBoxLayout" name="content" stretch="0,0">
            <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Content:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPlainTextEdit" name="plainTextEdit">
-             <property name="font">
-              <font>
-               <family>Monospace</family>
-              </font>
-             </property>
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Heeey&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="statusTip">
-              <string/>
-             </property>
-             <property name="whatsThis">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Foobar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="plainText">
-              <string># Why
+            <widget class="QWidget" name="widget" native="true">
+             <layout class="QGridLayout" name="gridLayout">
+              <property name="leftMargin">
+               <number>0</number>
+              </property>
+              <property name="topMargin">
+               <number>0</number>
+              </property>
+              <property name="rightMargin">
+               <number>0</number>
+              </property>
+              <property name="bottomMargin">
+               <number>0</number>
+              </property>
+              <item row="0" column="1">
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>Preview:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPlainTextEdit" name="plainTextEdit">
+                <property name="font">
+                 <font>
+                  <family>Monospace</family>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Foobar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="plainText">
+                 <string># Why
 
 Hello there.
 
@@ -179,36 +352,180 @@ Hello there.
 heh
 ```
 </string>
-             </property>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QTextBrowser" name="textBrowser_2">
+                <property name="font">
+                 <font>
+                  <family>Sans Serif</family>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string/>
+                </property>
+                <property name="statusTip">
+                 <string/>
+                </property>
+                <property name="whatsThis">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Foobar.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+                <property name="html">
+                 <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;h1 style=&quot; margin-top:18px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:xx-large; font-weight:600;&quot;&gt;Why &lt;/span&gt;&lt;/h1&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Hello there. &lt;/p&gt;
+&lt;p style=&quot; margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Hack';&quot;&gt;heh&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_8">
+                <item>
+                 <widget class="QToolButton" name="toolButton">
+                  <property name="toolTip">
+                   <string>Bold</string>
+                  </property>
+                  <property name="text">
+                   <string>B</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="format-text-bold">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButton_3">
+                  <property name="toolTip">
+                   <string>Italic</string>
+                  </property>
+                  <property name="text">
+                   <string>I</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="format-text-italic">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButton_2">
+                  <property name="toolTip">
+                   <string>Insert hyperlink</string>
+                  </property>
+                  <property name="text">
+                   <string>&lt;a&gt;</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="link">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButton_4">
+                  <property name="toolTip">
+                   <string>Insert image</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="image-x-generic">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButton_5">
+                  <property name="toolTip">
+                   <string>Insert video</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="video-x-generic">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QToolButton" name="toolButton_6">
+                  <property name="toolTip">
+                   <string>Insert audio</string>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                  <property name="icon">
+                   <iconset theme="audio-x-generic">
+                    <normaloff>.</normaloff>.</iconset>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <spacer name="horizontalSpacer_3">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+               </layout>
+              </item>
+             </layout>
             </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton">
+               <property name="text">
+                <string>&amp;Save</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_2">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="toolTip">
+                <string>Revert all unsaved changes</string>
+               </property>
+               <property name="text">
+                <string>&amp;Revert</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>
         </layout>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="mainButtonGroup">
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButton">
-        <property name="text">
-         <string>Save</string>
-        </property>
        </widget>
       </item>
      </layout>
@@ -221,12 +538,12 @@ heh
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>&amp;File</string>
     </property>
     <addaction name="action_New"/>
     <addaction name="action_Open"/>
@@ -238,15 +555,35 @@ heh
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Content</string>
+     <string>&amp;Articles</string>
     </property>
     <addaction name="actionNew_Post"/>
     <addaction name="actionNew_Page"/>
    </widget>
+   <widget class="QMenu" name="menuDeploy">
+    <property name="title">
+     <string>&amp;Publish</string>
+    </property>
+    <addaction name="actionPublish_to_Neocities"/>
+    <addaction name="actionGitHub_Pages"/>
+    <addaction name="separator"/>
+    <addaction name="actionManage"/>
+   </widget>
+   <widget class="QMenu" name="menuExport">
+    <property name="title">
+     <string>E&amp;xport</string>
+    </property>
+    <addaction name="action_www"/>
+    <addaction name="actionC_imnhan_com"/>
+    <addaction name="action_Users_Nhan_imnhan_com"/>
+    <addaction name="separator"/>
+    <addaction name="actionManage_2"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuDeploy"/>
+   <addaction name="menuExport"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <action name="action_New">
    <property name="text">
     <string>&amp;New...</string>
@@ -280,12 +617,67 @@ heh
   </action>
   <action name="actionNew_Post">
    <property name="text">
-    <string>New Post...</string>
+    <string>New P&amp;ost...</string>
    </property>
   </action>
   <action name="actionNew_Page">
    <property name="text">
-    <string>New Page...</string>
+    <string>New P&amp;age...</string>
+   </property>
+  </action>
+  <action name="actionPublish_to_Neocities">
+   <property name="icon">
+    <iconset theme="cloud-upload">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>Neocities</string>
+   </property>
+  </action>
+  <action name="actionGitHub_Pages">
+   <property name="icon">
+    <iconset theme="cloud-upload">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>GitHub Pages</string>
+   </property>
+  </action>
+  <action name="actionManage">
+   <property name="text">
+    <string>&amp;Manage...</string>
+   </property>
+  </action>
+  <action name="action_www">
+   <property name="icon">
+    <iconset theme="document-export">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>/var/www/hi.imnhan.com</string>
+   </property>
+  </action>
+  <action name="actionC_imnhan_com">
+   <property name="icon">
+    <iconset theme="document-export">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>C:\...\imnhan.com</string>
+   </property>
+  </action>
+  <action name="action_Users_Nhan_imnhan_com">
+   <property name="icon">
+    <iconset theme="document-export">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>/Users/Nhan/imnhan.com</string>
+   </property>
+  </action>
+  <action name="actionManage_2">
+   <property name="text">
+    <string>&amp;Manage...</string>
    </property>
   </action>
  </widget>
