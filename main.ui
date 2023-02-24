@@ -17,19 +17,19 @@
    <string/>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="1">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
     <item>
      <layout class="QHBoxLayout" name="mainUI" stretch="0,1">
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="articlesGroupBox">
           <property name="title">
            <string>Articles</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
-            <widget class="QTreeWidget" name="navigationTree">
+            <widget class="QTreeWidget" name="articlesTree">
              <property name="allColumnsShowFocus">
               <bool>false</bool>
              </property>
@@ -137,111 +137,201 @@
              </item>
             </widget>
            </item>
+           <item>
+            <layout class="QHBoxLayout" name="articlesButtons">
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_8">
+               <property name="text">
+                <string>Add p&amp;age</string>
+               </property>
+               <property name="icon">
+                <iconset theme="document-new"/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_5">
+               <property name="text">
+                <string>Add p&amp;ost</string>
+               </property>
+               <property name="icon">
+                <iconset theme="document-new"/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_4">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Delete</string>
+               </property>
+               <property name="icon">
+                <iconset theme="delete"/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
+         <widget class="QGroupBox" name="filesGroupBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="title">
            <string>Article's uploaded files:</string>
           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item>
+            <widget class="QListWidget" name="filesList">
+             <property name="toolTip">
+              <string/>
+             </property>
+             <item>
+              <property name="text">
+               <string>thumbnail.jpg</string>
+              </property>
+              <property name="toolTip">
+               <string>Double-click to insert into article</string>
+              </property>
+              <property name="icon">
+               <iconset theme="image-x-generic">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>some-file.mod</string>
+              </property>
+              <property name="toolTip">
+               <string>Double-click to insert into article</string>
+              </property>
+              <property name="icon">
+               <iconset theme="unknown">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>fail.mp3</string>
+              </property>
+              <property name="toolTip">
+               <string>Double-click to insert into article</string>
+              </property>
+              <property name="icon">
+               <iconset theme="audio-x-generic">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>demo.png</string>
+              </property>
+              <property name="toolTip">
+               <string>Double-click to insert into article</string>
+              </property>
+              <property name="icon">
+               <iconset theme="image-x-generic">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>screencast.webm</string>
+              </property>
+              <property name="toolTip">
+               <string>Double-click to insert into article</string>
+              </property>
+              <property name="icon">
+               <iconset theme="video-x-generic">
+                <normaloff>.</normaloff>.</iconset>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="filesButtons">
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_3">
+               <property name="text">
+                <string>&amp;Upload...</string>
+               </property>
+               <property name="icon">
+                <iconset theme="document-new"/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_7">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Rename...</string>
+               </property>
+               <property name="icon">
+                <iconset theme="edit-rename"/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_6">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>Delete</string>
+               </property>
+               <property name="icon">
+                <iconset theme="delete"/>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
-        </item>
-        <item>
-         <widget class="QListWidget" name="attachmentsList">
-          <property name="toolTip">
-           <string/>
-          </property>
-          <item>
-           <property name="text">
-            <string>thumbnail.jpg</string>
-           </property>
-           <property name="toolTip">
-            <string>Double-click to insert into article</string>
-           </property>
-           <property name="icon">
-            <iconset theme="image-x-generic">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>some-file.mod</string>
-           </property>
-           <property name="toolTip">
-            <string>Double-click to insert into article</string>
-           </property>
-           <property name="icon">
-            <iconset theme="unknown">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>fail.mp3</string>
-           </property>
-           <property name="toolTip">
-            <string>Double-click to insert into article</string>
-           </property>
-           <property name="icon">
-            <iconset theme="audio-x-generic">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>demo.png</string>
-           </property>
-           <property name="toolTip">
-            <string>Double-click to insert into article</string>
-           </property>
-           <property name="icon">
-            <iconset theme="image-x-generic">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>screencast.webm</string>
-           </property>
-           <property name="toolTip">
-            <string>Double-click to insert into article</string>
-           </property>
-           <property name="icon">
-            <iconset theme="video-x-generic">
-             <normaloff>.</normaloff>.</iconset>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pushButton_3">
-            <property name="text">
-             <string>&amp;Upload...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </item>
       <item>
        <widget class="QFrame" name="editor">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
         <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
          <property name="leftMargin">
           <number>0</number>
@@ -304,7 +394,7 @@
           </layout>
          </item>
          <item>
-          <layout class="QVBoxLayout" name="content" stretch="0,0">
+          <layout class="QVBoxLayout" name="content" stretch="0">
            <item>
             <widget class="QWidget" name="widget" native="true">
              <layout class="QGridLayout" name="gridLayout">
@@ -486,46 +576,52 @@ p, li { white-space: pre-wrap; }
              </layout>
             </widget>
            </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_5">
-             <item>
-              <spacer name="horizontalSpacer">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton">
-               <property name="text">
-                <string>&amp;Save</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="enabled">
-                <bool>true</bool>
-               </property>
-               <property name="toolTip">
-                <string>Revert all unsaved changes</string>
-               </property>
-               <property name="text">
-                <string>&amp;Revert</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </item>
           </layout>
          </item>
         </layout>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="mainButtons">
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>&amp;Save</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-save"/>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="toolTip">
+         <string>Revert all unsaved changes</string>
+        </property>
+        <property name="text">
+         <string>&amp;Revert</string>
+        </property>
+        <property name="icon">
+         <iconset theme="document-revert"/>
+        </property>
        </widget>
       </item>
      </layout>
@@ -538,7 +634,7 @@ p, li { white-space: pre-wrap; }
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -552,13 +648,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionSave_As"/>
     <addaction name="separator"/>
     <addaction name="action_Quit"/>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>&amp;Articles</string>
-    </property>
-    <addaction name="actionNew_Post"/>
-    <addaction name="actionNew_Page"/>
    </widget>
    <widget class="QMenu" name="menuDeploy">
     <property name="title">
@@ -580,7 +669,6 @@ p, li { white-space: pre-wrap; }
     <addaction name="actionManage_2"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
    <addaction name="menuDeploy"/>
    <addaction name="menuExport"/>
   </widget>
@@ -617,12 +705,12 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionNew_Post">
    <property name="text">
-    <string>New P&amp;ost...</string>
+    <string>Add P&amp;ost...</string>
    </property>
   </action>
   <action name="actionNew_Page">
    <property name="text">
-    <string>New P&amp;age...</string>
+    <string>Add P&amp;age...</string>
    </property>
   </action>
   <action name="actionPublish_to_Neocities">
