@@ -1,0 +1,24 @@
+<RCC>
+  <qresource prefix="icons">
+    <file alias="application-exit">icons/application-exit.svg</file>
+    <file alias="audio-x-generic">icons/audio-x-generic.svg</file>
+    <file alias="cloud-upload">icons/cloud-upload.svg</file>
+    <file alias="document-edit">icons/document-edit.svg</file>
+    <file alias="document-new">icons/document-new.svg</file>
+    <file alias="document-open">icons/document-open.svg</file>
+    <file alias="document-revert">icons/document-revert.svg</file>
+    <file alias="document-save-as">icons/document-save-as.svg</file>
+    <file alias="document-save">icons/document-save.svg</file>
+    <file alias="edit-delete">icons/edit-delete.svg</file>
+    <file alias="edit-redo">icons/edit-redo.svg</file>
+    <file alias="edit-undo">icons/edit-undo.svg</file>
+    <file alias="folder-open">icons/folder-open.svg</file>
+    <file alias="folder">icons/folder.svg</file>
+    <file alias="format-text-bold">icons/format-text-bold.svg</file>
+    <file alias="format-text-italic">icons/format-text-italic.svg</file>
+    <file alias="image-x-generic">icons/image-x-generic.svg</file>
+    <file alias="link">icons/link.svg</file>
+    <file alias="upload-media">icons/upload-media.svg</file>
+    <file alias="video-x-generic">icons/video-x-generic.svg</file>
+  </qresource>
+</RCC>

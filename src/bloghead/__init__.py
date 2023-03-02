@@ -1,6 +1,6 @@
 import sys
 
-from PySide2.QtGui import QColor, QKeySequence, QPalette
+from PySide2.QtGui import QColor, QIcon, QKeySequence, QPalette
 from PySide2.QtWidgets import (
     QAction,
     QApplication,
@@ -21,6 +21,8 @@ from PySide2.QtWidgets import (
     QWidget,
 )
 
+from . import resources  # noqa
+
 
 class MainWindow(QMainWindow):
     def __init__(self, quit_func):
@@ -35,15 +37,21 @@ class MainWindow(QMainWindow):
         left.addWidget(left.articles)
         left.articles.setLayout(QVBoxLayout())
 
-        left.articles.tree = QTreeWidget()
+        left.articles.tree = QTreeWidget(headerHidden=True)
         left.articles.layout().addWidget(left.articles.tree)
 
         left.articles.buttons = QHBoxLayout()
         left.articles.layout().addLayout(left.articles.buttons)
         left.articles.buttons.addStretch(1)
-        left.articles.buttons.addWidget(QPushButton("Add page..."))
-        left.articles.buttons.addWidget(QPushButton("Add post..."))
-        left.articles.buttons.addWidget(QPushButton("Delete...", enabled=False))
+        left.articles.buttons.addWidget(
+            QPushButton("Add page...", icon=QIcon(":icons/document-new"))
+        )
+        left.articles.buttons.addWidget(
+            QPushButton("Add post...", icon=QIcon(":icons/document-new"))
+        )
+        left.articles.buttons.addWidget(
+            QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
+        )
 
         left.files = QGroupBox("Article's uploaded files")
         left.files.setLayout(QVBoxLayout())
@@ -55,9 +63,15 @@ class MainWindow(QMainWindow):
         left.files.buttons = QHBoxLayout()
         left.files.layout().addLayout(left.files.buttons)
         left.files.buttons.addStretch(1)
-        left.files.buttons.addWidget(QPushButton("Upload..."))
-        left.files.buttons.addWidget(QPushButton("Rename..."))
-        left.files.buttons.addWidget(QPushButton("Delete...", enabled=False))
+        left.files.buttons.addWidget(
+            QPushButton("Upload...", icon=QIcon(":icons/upload-media"))
+        )
+        left.files.buttons.addWidget(
+            QPushButton("Rename...", icon=QIcon(":icons/document-edit"))
+        )
+        left.files.buttons.addWidget(
+            QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
+        )
 
         # Right block: article editor
         right = QVBoxLayout()
@@ -82,22 +96,33 @@ class MainWindow(QMainWindow):
         widget.setLayout(layout)
         layout.addLayout(left)
         layout.addLayout(right, stretch=1)
+        widget.setDisabled(True)
 
         # "Table stakes" actions e.g. New, Open, Save, Quit:
 
-        new_action = QAction("&New", self)
+        new_action = QAction("&New", self, icon=QIcon(":/icons/document-new"))
         new_action.setShortcut(QKeySequence.New)
 
-        open_action = QAction("&Open", self)
+        open_action = QAction("&Open", self, icon=QIcon(":/icons/document-open"))
         open_action.setShortcut(QKeySequence.Open)
 
-        save_action = QAction("&Save", self)
+        save_action = QAction(
+            "&Save",
+            self,
+            icon=QIcon(":/icons/document-save"),
+            enabled=False,
+        )
         save_action.setShortcut(QKeySequence.Save)
 
-        save_as_action = QAction("Save &As...", self)
+        save_as_action = QAction(
+            "Save &As...",
+            self,
+            icon=QIcon(":/icons/document-save-as"),
+            enabled=False,
+        )
         save_as_action.setShortcut(QKeySequence.SaveAs)
 
-        quit_action = QAction("&Quit", self)
+        quit_action = QAction("&Quit", self, icon=QIcon(":/icons/application-exit"))
         quit_action.triggered.connect(quit_func)
         quit_action.setShortcut(QKeySequence.Quit)
 
@@ -124,9 +149,11 @@ class MainWindow(QMainWindow):
 
         publish_menu = menu.addMenu("&Publish")
         publish_menu.addAction("&Manage...")
+        publish_menu.setDisabled(True)
 
         export_menu = menu.addMenu("E&xport")
         export_menu.addAction("&Manage...")
+        export_menu.setDisabled(True)
 
         self.statusBar()
 

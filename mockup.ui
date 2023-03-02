@@ -720,7 +720,8 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="action_Quit">
    <property name="icon">
-    <iconset theme="application-exit"/>
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -819,6 +820,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="src/bloghead/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
