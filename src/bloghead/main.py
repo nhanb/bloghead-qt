@@ -1,0 +1,166 @@
+import sys
+
+from PySide2.QtGui import QIcon, QKeySequence
+from PySide2.QtWidgets import (
+    QAction,
+    QApplication,
+    QFormLayout,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QListWidget,
+    QMainWindow,
+    QPlainTextEdit,
+    QPushButton,
+    QTextBrowser,
+    QToolBar,
+    QTreeWidget,
+    QVBoxLayout,
+    QWidget,
+)
+
+from . import resources  # noqa
+
+
+class MainWindow(QMainWindow):
+    def __init__(self, quit_func):
+        super(MainWindow, self).__init__()
+
+        self.setWindowTitle("Bloghead")
+
+        # Left block: article navigaion, files list
+        left = QVBoxLayout()
+
+        left.articles = QGroupBox("Articles")
+        left.addWidget(left.articles)
+        left.articles.setLayout(QVBoxLayout())
+
+        left.articles.tree = QTreeWidget(headerHidden=True)
+        left.articles.layout().addWidget(left.articles.tree)
+
+        left.articles.buttons = QHBoxLayout()
+        left.articles.layout().addLayout(left.articles.buttons)
+        left.articles.buttons.addStretch(1)
+        left.articles.buttons.addWidget(
+            QPushButton("Add page...", icon=QIcon(":icons/document-new"))
+        )
+        left.articles.buttons.addWidget(
+            QPushButton("Add post...", icon=QIcon(":icons/document-new"))
+        )
+        left.articles.buttons.addWidget(
+            QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
+        )
+
+        left.files = QGroupBox("Article's uploaded files")
+        left.files.setLayout(QVBoxLayout())
+        left.addWidget(left.files)
+
+        left.files.list = QListWidget()
+        left.files.layout().addWidget(left.files.list)
+
+        left.files.buttons = QHBoxLayout()
+        left.files.layout().addLayout(left.files.buttons)
+        left.files.buttons.addStretch(1)
+        left.files.buttons.addWidget(
+            QPushButton("Upload...", icon=QIcon(":icons/upload-media"))
+        )
+        left.files.buttons.addWidget(
+            QPushButton("Rename...", icon=QIcon(":icons/document-edit"))
+        )
+        left.files.buttons.addWidget(
+            QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
+        )
+
+        # Right block: article editor
+        right = QVBoxLayout()
+
+        right.form = QFormLayout()
+        right.addLayout(right.form)
+        right.form.addRow("Title:", QLineEdit())
+        right.form.addRow("Slug:", QLineEdit())
+
+        right.editor = QGridLayout()
+        right.addLayout(right.editor)
+
+        right.editor.buttons = QHBoxLayout()
+        right.editor.addLayout(right.editor.buttons, 0, 0)
+        right.editor.addWidget(QLabel("Preview:"), 0, 1)
+        right.editor.addWidget(QPlainTextEdit(), 1, 0)
+        right.editor.addWidget(QTextBrowser(), 1, 1)
+
+        widget = QWidget()
+        self.setCentralWidget(widget)
+        layout = QHBoxLayout()
+        widget.setLayout(layout)
+        layout.addLayout(left)
+        layout.addLayout(right, stretch=1)
+        widget.setDisabled(True)
+
+        # "Table stakes" actions e.g. New, Open, Save, Quit:
+
+        new_action = QAction("&New", self, icon=QIcon(":/icons/document-new"))
+        new_action.setShortcut(QKeySequence.New)
+
+        open_action = QAction("&Open", self, icon=QIcon(":/icons/document-open"))
+        open_action.setShortcut(QKeySequence.Open)
+
+        save_action = QAction(
+            "&Save",
+            self,
+            icon=QIcon(":/icons/document-save"),
+            enabled=False,
+        )
+        save_action.setShortcut(QKeySequence.Save)
+
+        save_as_action = QAction(
+            "Save &As...",
+            self,
+            icon=QIcon(":/icons/document-save-as"),
+            enabled=False,
+        )
+        save_as_action.setShortcut(QKeySequence.SaveAs)
+
+        quit_action = QAction("&Quit", self, icon=QIcon(":/icons/application-exit"))
+        quit_action.triggered.connect(quit_func)
+        quit_action.setShortcut(QKeySequence.Quit)
+
+        toolbar = QToolBar("Main toolbar", movable=False)
+        toolbar.addAction(new_action)
+        toolbar.addAction(open_action)
+        toolbar.addSeparator()
+        toolbar.addAction(save_action)
+        toolbar.addAction(save_as_action)
+        toolbar.addSeparator()
+        toolbar.addAction(quit_action)
+        self.addToolBar(toolbar)
+
+        menu = self.menuBar()
+
+        file_menu = menu.addMenu("&File")
+        file_menu.addAction(new_action)
+        file_menu.addAction(open_action)
+        file_menu.addSeparator()
+        file_menu.addAction(save_action)
+        file_menu.addAction(save_as_action)
+        file_menu.addSeparator()
+        file_menu.addAction(quit_action)
+
+        publish_menu = menu.addMenu("&Publish")
+        publish_menu.addAction("&Manage...")
+        publish_menu.setDisabled(True)
+
+        export_menu = menu.addMenu("E&xport")
+        export_menu.addAction("&Manage...")
+        export_menu.setDisabled(True)
+
+        self.statusBar()
+
+
+def start():
+    app = QApplication(sys.argv)
+    window = MainWindow(quit_func=app.quit)
+    window.resize(800, 600)
+    window.show()
+    sys.exit(app.exec_())

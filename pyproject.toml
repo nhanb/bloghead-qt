@@ -7,7 +7,7 @@ license = "GPL-3.0-only"
 readme = "README.md"
 
 [tool.poetry.scripts]
-bloghead = "bloghead:main"
+bloghead = "bloghead:start"
 
 [tool.poetry.dependencies]
 python = "~3.10"
