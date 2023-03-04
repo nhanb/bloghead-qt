@@ -1,39 +1,32 @@
+import re
 import sqlite3
-from importlib.resources import read_binary
+from dataclasses import dataclass
+from importlib import resources
 from pathlib import Path
 
-from dataclass import dataclass
+
+def regexp(expr, item):
+    reg = re.compile(expr)
+    return reg.search(item) is not None
 
 
 @dataclass(slots=True)
 class Blog:
     """
-    Provides read/write access to a blog's underlying files on disk.
-    DO NOT initialize a Blog() directly. Use new_blog() or open_blog() instead.
+    Provides read/write access to a blog's underlying file on disk.
+    To open: `blog = Blog(path)`
+    To create new: `blog = Blog(path).init_schema()`
     """
 
     conn: sqlite3.Connection
     path: Path
-    attachments_path: Path
 
     def __init__(self, path: Path):
-        self.conn = sqlite3.connect(path / "data.bloghead")
         self.path = path
-        self.attachments_path = path / "attachments"
+        self.conn = sqlite3.connect(path)
+        self.conn.create_function("REGEXP", 2, regexp)
 
-
-def new_blog(path: Path) -> Blog:
-    # Create necessary folders and file
-    path.mkdir(parents=True)
-    blog = Blog(path)
-    blog.attachments_path.mkdir()
-
-    # Initialize db schema
-    schema_sql = read_binary("bloghead", "persistence.schema.sql")
-    blog.conn.cursor().executescript(schema_sql)
-
-    return blog
-
-
-def open_blog(path: Path) -> Blog:
-    return Blog(path)
+    def init_schema(self):
+        schema_sql = resources.read_text("bloghead.persistence", "schema.sql")
+        self.conn.cursor().executescript(schema_sql)
+        return self

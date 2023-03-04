@@ -1,1 +1,1 @@
-from .common import Blog, new_blog, open_blog  # noqa
+from .common import Blog  # noqa

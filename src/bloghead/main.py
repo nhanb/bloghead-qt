@@ -1,9 +1,11 @@
 import sys
+from pathlib import Path
 
 from PySide2.QtGui import QIcon, QKeySequence
 from PySide2.QtWidgets import (
     QAction,
     QApplication,
+    QFileDialog,
     QFormLayout,
     QGridLayout,
     QGroupBox,
@@ -22,10 +24,18 @@ from PySide2.QtWidgets import (
 )
 
 from . import resources  # noqa
+from .persistence import Blog
+
+FILE_EXTENSION = "bloghead"
 
 
 class MainWindow(QMainWindow):
     def __init__(self, quit_func):
+        # 1. State stuff
+        self.blog = None
+
+        # 2. GUI stuff
+
         super(MainWindow, self).__init__()
 
         self.setWindowTitle("Bloghead")
@@ -102,9 +112,11 @@ class MainWindow(QMainWindow):
 
         new_action = QAction("&New", self, icon=QIcon(":/icons/document-new"))
         new_action.setShortcut(QKeySequence.New)
+        new_action.triggered.connect(self.action_new)
 
         open_action = QAction("&Open", self, icon=QIcon(":/icons/document-open"))
         open_action.setShortcut(QKeySequence.Open)
+        open_action.triggered.connect(self.action_open)
 
         save_action = QAction(
             "&Save",
@@ -155,7 +167,44 @@ class MainWindow(QMainWindow):
         export_menu.addAction("&Manage...")
         export_menu.setDisabled(True)
 
-        self.statusBar()
+        self.statusBar().showMessage("Tip: Open or create a New blog to start")
+
+    def action_new(self):
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            caption="Create new blog",
+            filter=f"Bloghead files (*.{FILE_EXTENSION})",
+            dir=str(Path.home()),
+        )
+        if not path:
+            self.statusBar().showMessage("Aborted new blog creation")
+            return
+
+        ext = f".{FILE_EXTENSION}"
+        if not path.endswith(ext):
+            path += ext
+
+        path = Path(path)
+        if path.exists():
+            # QFileDialog should have already asked user to confirm to overwrite.
+            path.unlink()
+
+        self.blog = Blog(Path(path)).init_schema()
+        self.statusBar().showMessage(f"Created {path}")
+
+    def action_open(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self,
+            caption="Open blog",
+            filter=f"Bloghead files (*.{FILE_EXTENSION})",
+            dir=str(Path.home()),
+        )
+        if not path:
+            self.statusBar().showMessage("Aborted open blog")
+            return
+
+        self.blog = Blog(Path(path))
+        self.statusBar().showMessage(f"Opened {path}")
 
 
 def start():
