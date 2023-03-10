@@ -25,14 +25,15 @@ create table site (
 ) strict;
 insert into site(id) values(0);
 
-create table post (
+create table article (
     id integer primary key,
     slug text unique check (slug regexp '^[\w\-\.~]+$') not null,
     title text unique not null,
     content text not null default '',
     created_at datetime not null default (strftime('%Y-%m-%d %H:%M:%SZ')),
     updated_at datetime default null,
-    is_draft boolean not null default true
+    is_draft boolean not null default true,
+    is_page boolean not null default false
 );
 
 create table attachment (
@@ -40,8 +41,8 @@ create table attachment (
     name text not null check (name regexp '^[\w\-\.~]+$'),
     data blob not null,
 
-    post_id integer not null,
-    foreign key (post_id) references post(id) on delete cascade,
+    article_id integer not null,
+    foreign key (article_id) references article(id) on delete cascade,
 
-    unique(post_id, name)
+    unique(article_id, name)
 ) strict;

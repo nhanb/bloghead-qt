@@ -1,13 +1,10 @@
-import re
-import sqlite3
 from dataclasses import dataclass
-from importlib import resources
 from pathlib import Path
 
+import peewee
 
-def regexp(expr, item):
-    reg = re.compile(expr)
-    return reg.search(item) is not None
+from . import models
+from .models import Article, Page, Post
 
 
 @dataclass(slots=True)
@@ -18,15 +15,42 @@ class Blog:
     To create new: `blog = Blog(path).init_schema()`
     """
 
-    conn: sqlite3.Connection
+    db: peewee.SqliteDatabase
     path: Path
 
     def __init__(self, path: Path):
         self.path = path
-        self.conn = sqlite3.connect(path)
-        self.conn.create_function("REGEXP", 2, regexp)
+        self.db = models.DATABASE
+        self.db.init(str(path))
+        self.db.connect()
 
     def init_schema(self):
-        schema_sql = resources.read_text("bloghead.persistence", "schema.sql")
-        self.conn.cursor().executescript(schema_sql)
+        self.db.create_tables(models.TABLES)
+        self.db.execute_sql(
+            "create view post as select * from article where is_page = false;",
+        )
+        self.db.execute_sql(
+            "create view page as select * from article where is_page = true;",
+        )
         return self
+
+    def create_article(self, **kwargs) -> int:
+        article = Article(**kwargs)
+        article.save()
+        return article.id
+
+    def count_pages(self) -> int:
+        return Page.select().count()
+
+    def count_posts(self) -> int:
+        return Post.select().count()
+
+    def get_page_title(self, index: int) -> tuple[int, str]:
+        """Returns tuple(id, title)"""
+        page = Page.select(Page.id, Page.title).order_by(Page.created_at.desc())[index]
+        return (page.id, page.title)
+
+    def get_post_title(self, index: int) -> tuple[int, str]:
+        """Returns tuple(id, title)"""
+        post = Post.select(Post.id, Post.title).order_by(Post.created_at.desc())[index]
+        return (post.id, post.title)
