@@ -19,10 +19,11 @@ blog = Blog(fpath).init_schema()
 
 seeds = sorted(Path("scripts/seed-data").glob("*.seed"))
 for seed in seeds:
-    slug = seed.name.split(".")[1]
+    id, slug, _ = seed.name.split(".")
     with open(seed, "r") as sf:
         draft, article_type, title, content = sf.read().strip().split("\n", maxsplit=3)
-    blog.create_article(
+    article = blog.create_article(
+        id=int(id),
         slug=slug,
         title=title,
         content=content,

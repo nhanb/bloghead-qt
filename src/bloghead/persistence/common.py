@@ -27,17 +27,15 @@ class Blog:
     def init_schema(self):
         self.db.create_tables(models.TABLES)
         self.db.execute_sql(
-            "create view post as select * from article where is_page = false;",
+            "create view post as select * from article where is_page = false order by id desc;",
         )
         self.db.execute_sql(
-            "create view page as select * from article where is_page = true;",
+            "create view page as select * from article where is_page = true order by id desc;",
         )
         return self
 
     def create_article(self, **kwargs) -> int:
-        article = Article(**kwargs)
-        article.save()
-        return article.id
+        return Article.insert(**kwargs).execute()
 
     def count_pages(self) -> int:
         return Page.select().count()
@@ -47,10 +45,13 @@ class Blog:
 
     def get_page_title(self, index: int) -> tuple[int, str]:
         """Returns tuple(id, title)"""
-        page = Page.select(Page.id, Page.title).order_by(Page.created_at.desc())[index]
+        page = Page.select(Page.id, Page.title)[index]
         return (page.id, page.title)
 
     def get_post_title(self, index: int) -> tuple[int, str]:
         """Returns tuple(id, title)"""
-        post = Post.select(Post.id, Post.title).order_by(Post.created_at.desc())[index]
+        post = Post.select(Post.id, Post.title)[index]
         return (post.id, post.title)
+
+    def get_article(self, id: int) -> Article:
+        return Article.get(Article.id == id)

@@ -58,6 +58,7 @@ class MainWindow(QMainWindow):
         left.articles.posts.buttons.addWidget(
             QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
         )
+        left.articles.posts.list.activated.connect(self.select_post)
 
         left.articles.pages = QWidget()
         left.articles.addTab(left.articles.pages, "Pages")
@@ -96,11 +97,14 @@ class MainWindow(QMainWindow):
 
         # Right block: article editor
         right = QVBoxLayout()
+        self.right = right
 
         right.form = QFormLayout()
         right.addLayout(right.form)
-        right.form.addRow("Title:", QLineEdit())
-        right.form.addRow("Slug:", QLineEdit())
+        right.form.title = QLineEdit()
+        right.form.addRow("Title:", right.form.title)
+        right.form.slug = QLineEdit()
+        right.form.addRow("Slug:", right.form.slug)
 
         right.editor = QGridLayout()
         right.addLayout(right.editor)
@@ -230,6 +234,16 @@ class MainWindow(QMainWindow):
 
         self.centralWidget().setEnabled(True)
         self.blog = blog
+
+    def set_article(self, id: int):
+        self.article = self.blog.get_article(id)
+
+        self.right.form.title.setText(self.article.title)
+        self.right.form.slug.setText(self.article.slug)
+
+    def select_post(self, index):
+        id, _ = self.blog.get_post_title(index.row())
+        self.set_article(id)
 
 
 class PostsModel(QAbstractListModel):
