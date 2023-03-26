@@ -37,21 +37,11 @@ class Blog:
     def create_article(self, **kwargs) -> int:
         return Article.insert(**kwargs).execute()
 
-    def count_pages(self) -> int:
-        return Page.select().count()
-
-    def count_posts(self) -> int:
-        return Post.select().count()
-
-    def get_page_title(self, index: int) -> tuple[int, str]:
-        """Returns tuple(id, title)"""
-        page = Page.select(Page.id, Page.title)[index]
-        return (page.id, page.title)
-
-    def get_post_title(self, index: int) -> tuple[int, str]:
-        """Returns tuple(id, title)"""
-        post = Post.select(Post.id, Post.title)[index]
-        return (post.id, post.title)
-
     def get_article(self, id: int) -> Article:
         return Article.get(Article.id == id)
+
+    def list_pages(self) -> list[tuple[int, str]]:
+        return [(page.id, page.title) for page in Page.select(Page.id, Page.title)]
+
+    def list_posts(self) -> list[tuple[int, str]]:
+        return [(post.id, post.title) for post in Post.select(Post.id, Post.title)]

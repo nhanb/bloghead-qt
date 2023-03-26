@@ -2,7 +2,6 @@ import argparse
 import sys
 from pathlib import Path
 
-from PySide2.QtCore import QAbstractListModel, QModelIndex, Qt
 from PySide2.QtGui import QIcon, QKeySequence
 from PySide2.QtWidgets import (
     QAction,
@@ -14,7 +13,6 @@ from PySide2.QtWidgets import (
     QHBoxLayout,
     QLabel,
     QLineEdit,
-    QListView,
     QListWidget,
     QMainWindow,
     QPlainTextEdit,
@@ -47,7 +45,7 @@ class MainWindow(QMainWindow):
         left.articles.posts = QWidget()
         left.articles.addTab(left.articles.posts, "Posts")
         left.articles.posts.setLayout(QVBoxLayout())
-        left.articles.posts.list = QListView()
+        left.articles.posts.list = QListWidget()
         left.articles.posts.layout().addWidget(left.articles.posts.list)
         left.articles.posts.buttons = QHBoxLayout()
         left.articles.posts.layout().addLayout(left.articles.posts.buttons)
@@ -58,12 +56,24 @@ class MainWindow(QMainWindow):
         left.articles.posts.buttons.addWidget(
             QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
         )
-        left.articles.posts.list.activated.connect(self.select_post)
+
+        def on_select_post(index):
+            widget = left.articles.posts.list
+            row = index.row()
+            id, _ = widget.data[row]
+            for i in range(widget.count()):
+                item = widget.item(i)
+                font = item.font()
+                font.setBold(i == row)
+                item.setFont(font)
+            self.set_article(id)
+
+        left.articles.posts.list.activated.connect(on_select_post)
 
         left.articles.pages = QWidget()
         left.articles.addTab(left.articles.pages, "Pages")
         left.articles.pages.setLayout(QVBoxLayout())
-        left.articles.pages.list = QListView()
+        left.articles.pages.list = QListWidget()
         left.articles.pages.layout().addWidget(left.articles.pages.list)
         left.articles.pages.buttons = QHBoxLayout()
         left.articles.pages.layout().addLayout(left.articles.pages.buttons)
@@ -74,6 +84,19 @@ class MainWindow(QMainWindow):
         left.articles.pages.buttons.addWidget(
             QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
         )
+
+        def on_select_page(index):
+            widget = left.articles.pages.list
+            row = index.row()
+            id, _ = widget.data[row]
+            for i in range(widget.count()):
+                item = widget.item(i)
+                font = item.font()
+                font.setBold(i == row)
+                item.setFont(font)
+            self.set_article(id)
+
+        left.articles.pages.list.activated.connect(on_select_page)
 
         left.files = QGroupBox("Article's uploaded files")
         left.files.setLayout(QVBoxLayout())
@@ -229,8 +252,15 @@ class MainWindow(QMainWindow):
     def set_blog(self, path: Path):
         blog = Blog(path)
 
-        self.left.articles.pages.list.setModel(PagesModel(blog))
-        self.left.articles.posts.list.setModel(PostsModel(blog))
+        pages = self.left.articles.pages.list
+        pages.clear()
+        pages.data = blog.list_pages()
+        pages.addItems(title for _, title in pages.data)
+
+        posts = self.left.articles.posts.list
+        posts.clear()
+        posts.data = blog.list_posts()
+        posts.addItems(title for _, title in posts.data)
 
         self.centralWidget().setEnabled(True)
         self.blog = blog
@@ -240,42 +270,6 @@ class MainWindow(QMainWindow):
 
         self.right.form.title.setText(self.article.title)
         self.right.form.slug.setText(self.article.slug)
-
-    def select_post(self, index):
-        id, _ = self.blog.get_post_title(index.row())
-        self.set_article(id)
-
-
-class PostsModel(QAbstractListModel):
-    def __init__(self, blog: Blog):
-        super().__init__()
-        self.blog = blog
-
-    def rowCount(self, parent: QModelIndex):
-        return self.blog.count_posts()
-
-    def data(self, index: QModelIndex, role):
-        if role != Qt.DisplayRole:
-            return
-
-        _, title = self.blog.get_post_title(index.row())
-        return title
-
-
-class PagesModel(QAbstractListModel):
-    def __init__(self, blog: Blog):
-        super().__init__()
-        self.blog = blog
-
-    def rowCount(self, parent: QModelIndex):
-        return self.blog.count_pages()
-
-    def data(self, index: QModelIndex, role):
-        if role != Qt.DisplayRole:
-            return
-
-        _, title = self.blog.get_page_title(index.row())
-        return title
 
 
 def start():
