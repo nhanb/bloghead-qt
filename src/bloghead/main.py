@@ -17,7 +17,7 @@ from PySide2.QtWidgets import (
     QMainWindow,
     QPlainTextEdit,
     QPushButton,
-    QTextBrowser,
+    QTextEdit,
     QToolBar,
     QTreeWidget,
     QTreeWidgetItem,
@@ -26,6 +26,7 @@ from PySide2.QtWidgets import (
 )
 
 from . import resources  # noqa
+from . import djot
 from .persistence import Blog
 
 FILE_EXTENSION = "bloghead"
@@ -111,8 +112,22 @@ class MainWindow(QMainWindow):
         right.editor.buttons = QHBoxLayout()
         right.editor.addLayout(right.editor.buttons, 0, 0)
         right.editor.addWidget(QLabel("Preview:"), 0, 1)
-        right.editor.addWidget(QPlainTextEdit(), 1, 0)
-        right.editor.addWidget(QTextBrowser(), 1, 1)
+
+        right.editor.content = QPlainTextEdit()
+        right.editor.addWidget(right.editor.content, 1, 0)
+
+        right.editor.preview = QTextEdit()
+        right.editor.preview.setReadOnly(True)
+        right.editor.addWidget(right.editor.preview, 1, 1)
+
+        def on_content_change():
+            # FIXME: this is currently blocking.
+            # Make it async and maybe debounce.
+            right.editor.preview.setHtml(
+                djot.to_html(right.editor.content.toPlainText())
+            )
+
+        right.editor.content.textChanged.connect(on_content_change)
 
         widget = QWidget()
         self.setCentralWidget(widget)
@@ -257,6 +272,7 @@ class MainWindow(QMainWindow):
 
         self.right.form.title.setText(self.article.title)
         self.right.form.slug.setText(self.article.slug)
+        self.right.editor.content.setPlainText(self.article.content)
 
         self.statusBar().showMessage(f"Selected article: {self.article.title}")
 
