@@ -17,9 +17,10 @@ from PySide2.QtWidgets import (
     QMainWindow,
     QPlainTextEdit,
     QPushButton,
-    QTabWidget,
     QTextBrowser,
     QToolBar,
+    QTreeWidget,
+    QTreeWidgetItem,
     QVBoxLayout,
     QWidget,
 )
@@ -39,64 +40,39 @@ class MainWindow(QMainWindow):
         left = QVBoxLayout()
         self.left = left
 
-        left.articles = QTabWidget()
+        left.articles = QGroupBox("Articles")
+        left.articles.setLayout(QVBoxLayout())
         left.addWidget(left.articles)
 
-        left.articles.posts = QWidget()
-        left.articles.addTab(left.articles.posts, "Posts")
-        left.articles.posts.setLayout(QVBoxLayout())
-        left.articles.posts.list = QListWidget()
-        left.articles.posts.layout().addWidget(left.articles.posts.list)
-        left.articles.posts.buttons = QHBoxLayout()
-        left.articles.posts.layout().addLayout(left.articles.posts.buttons)
-        left.articles.posts.buttons.addStretch(1)
-        left.articles.posts.buttons.addWidget(
+        left.articles.tree = QTreeWidget()
+        left.articles.tree.setHeaderHidden(True)
+        left.articles.layout().addWidget(left.articles.tree)
+
+        left.articles.buttons = QHBoxLayout()
+        left.articles.layout().addLayout(left.articles.buttons)
+        left.articles.buttons.addStretch(1)
+        left.articles.buttons.addWidget(
             QPushButton("Add post...", icon=QIcon(":icons/document-new"))
         )
-        left.articles.posts.buttons.addWidget(
-            QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
-        )
-
-        def on_select_post(index):
-            widget = left.articles.posts.list
-            row = index.row()
-            id, _ = widget.data[row]
-            for i in range(widget.count()):
-                item = widget.item(i)
-                font = item.font()
-                font.setBold(i == row)
-                item.setFont(font)
-            self.set_article(id)
-
-        left.articles.posts.list.activated.connect(on_select_post)
-
-        left.articles.pages = QWidget()
-        left.articles.addTab(left.articles.pages, "Pages")
-        left.articles.pages.setLayout(QVBoxLayout())
-        left.articles.pages.list = QListWidget()
-        left.articles.pages.layout().addWidget(left.articles.pages.list)
-        left.articles.pages.buttons = QHBoxLayout()
-        left.articles.pages.layout().addLayout(left.articles.pages.buttons)
-        left.articles.pages.buttons.addStretch(1)
-        left.articles.pages.buttons.addWidget(
+        left.articles.buttons.addWidget(
             QPushButton("Add page...", icon=QIcon(":icons/document-new"))
         )
-        left.articles.pages.buttons.addWidget(
+        left.articles.buttons.addWidget(
             QPushButton("Delete...", enabled=False, icon=QIcon(":icons/edit-delete"))
         )
 
-        def on_select_page(index):
-            widget = left.articles.pages.list
-            row = index.row()
-            id, _ = widget.data[row]
-            for i in range(widget.count()):
-                item = widget.item(i)
-                font = item.font()
-                font.setBold(i == row)
-                item.setFont(font)
+        def on_select_article(item):
+            id = getattr(item, "article_id", None)
+            if id is None:
+                return
+
+            # font = item.font(0)
+            # font.setBold(True)
+            # item.setFont(0, font)
+
             self.set_article(id)
 
-        left.articles.pages.list.activated.connect(on_select_page)
+        left.articles.tree.itemActivated.connect(on_select_article)
 
         left.files = QGroupBox("Article's uploaded files")
         left.files.setLayout(QVBoxLayout())
@@ -251,16 +227,27 @@ class MainWindow(QMainWindow):
 
     def set_blog(self, path: Path):
         blog = Blog(path)
+        posts_data = blog.list_posts()
+        pages_data = blog.list_pages()
 
-        pages = self.left.articles.pages.list
-        pages.clear()
-        pages.data = blog.list_pages()
-        pages.addItems(title for _, title in pages.data)
+        tree = self.left.articles.tree
+        tree.clear()
+        posts = QTreeWidgetItem(tree)
+        posts.setIcon(0, QIcon(":icons/folder"))
+        posts.setText(0, f"Posts: {len(posts_data)}")
+        pages = QTreeWidgetItem(tree)
+        pages.setIcon(0, QIcon(":icons/folder"))
+        pages.setText(0, f"Pages: {len(pages_data)}")
 
-        posts = self.left.articles.posts.list
-        posts.clear()
-        posts.data = blog.list_posts()
-        posts.addItems(title for _, title in posts.data)
+        for id, title in posts_data:
+            post = QTreeWidgetItem(posts)
+            post.setText(0, title)
+            post.article_id = id
+
+        for id, title in pages_data:
+            page = QTreeWidgetItem(pages)
+            page.setText(0, title)
+            page.article_id = id
 
         self.centralWidget().setEnabled(True)
         self.blog = blog
@@ -270,6 +257,8 @@ class MainWindow(QMainWindow):
 
         self.right.form.title.setText(self.article.title)
         self.right.form.slug.setText(self.article.slug)
+
+        self.statusBar().showMessage(f"Selected article: {self.article.title}")
 
 
 def start():
