@@ -71,6 +71,7 @@ def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
             djot_text = input_q.get()
             html_text = djot.to_html(djot_text)
             signals.result.emit(html_text)
+            print(html_text)
             input_q.task_done()
 
     signals.result.connect(preview.setHtml)
@@ -169,6 +170,11 @@ class MainWindow(QMainWindow):
 
         right.editor.preview = QTextEdit()
         right.editor.preview.setReadOnly(True)
+        right.editor.preview.document().setDefaultStyleSheet(
+            """
+            code { background-color:#eee; padding:10px; font-family:"Ubuntu Mono";}
+            """
+        )
         right.editor.addWidget(right.editor.preview, 1, 1)
 
         autoupdate_preview(right.editor.content, right.editor.preview)
