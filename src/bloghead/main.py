@@ -1,7 +1,10 @@
 import argparse
 import sys
 from pathlib import Path
+from queue import Queue
+from threading import Thread, Timer
 
+from PySide2.QtCore import QObject, Signal
 from PySide2.QtGui import QIcon, QKeySequence
 from PySide2.QtWidgets import (
     QAction,
@@ -30,6 +33,54 @@ from . import djot
 from .persistence import Blog
 
 FILE_EXTENSION = "bloghead"
+
+
+def debounce(func):
+    seconds = 0.2
+    timer = Timer(seconds, lambda: None)
+
+    def inner(*args, **kwargs):
+        nonlocal timer
+        timer.cancel()
+        timer = Timer(seconds, func, args, kwargs)
+        timer.start()
+
+    return inner
+
+
+def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
+    """
+    Whenever djot content changes, update the preview panel accordingly.
+
+    Since shelling out to `djot` cli takes some non-negligible time, it's done in
+    a separate daemon thread which consumes tasks from a queue, does djot-to-html
+    conversion, then emits a custom Qt signal to update the preview widget.
+
+    The input queue is also debounced to avoid unnecessary work.
+    """
+    input_q = Queue()
+
+    # Qt signals can only be emitted by a QObject-derived class:
+    class PreviewSignals(QObject):
+        result = Signal(str)
+
+    signals = PreviewSignals()
+
+    def djot_worker():
+        while True:
+            djot_text = input_q.get()
+            html_text = djot.to_html(djot_text)
+            signals.result.emit(html_text)
+            input_q.task_done()
+
+    signals.result.connect(preview.setHtml)
+    Thread(target=djot_worker, daemon=True).start()
+
+    @debounce
+    def on_content_change():
+        input_q.put(content.toPlainText())
+
+    content.textChanged.connect(on_content_change)
 
 
 class MainWindow(QMainWindow):
@@ -120,14 +171,7 @@ class MainWindow(QMainWindow):
         right.editor.preview.setReadOnly(True)
         right.editor.addWidget(right.editor.preview, 1, 1)
 
-        def on_content_change():
-            # FIXME: this is currently blocking.
-            # Make it async and maybe debounce.
-            right.editor.preview.setHtml(
-                djot.to_html(right.editor.content.toPlainText())
-            )
-
-        right.editor.content.textChanged.connect(on_content_change)
+        autoupdate_preview(right.editor.content, right.editor.preview)
 
         widget = QWidget()
         self.setCentralWidget(widget)
