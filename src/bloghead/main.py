@@ -35,17 +35,19 @@ from .persistence import Blog
 FILE_EXTENSION = "bloghead"
 
 
-def debounce(func):
-    seconds = 0.2
-    timer = Timer(seconds, lambda: None)
+def debounce(seconds: float):
+    def decorator(func):
+        timer = Timer(seconds, lambda: None)
 
-    def inner(*args, **kwargs):
-        nonlocal timer
-        timer.cancel()
-        timer = Timer(seconds, func, args, kwargs)
-        timer.start()
+        def inner(*args, **kwargs):
+            nonlocal timer
+            timer.cancel()
+            timer = Timer(seconds, func, args, kwargs)
+            timer.start()
 
-    return inner
+        return inner
+
+    return decorator
 
 
 def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
@@ -77,7 +79,7 @@ def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
     signals.result.connect(preview.setHtml)
     Thread(target=djot_worker, daemon=True).start()
 
-    @debounce
+    @debounce(0.2)
     def on_content_change():
         input_q.put(content.toPlainText())
 
