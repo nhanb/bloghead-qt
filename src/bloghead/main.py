@@ -29,7 +29,7 @@ from PySide2.QtWidgets import (
 )
 
 from . import resources  # noqa
-from . import djot
+from . import djot_ipc
 from .persistence import Blog
 
 FILE_EXTENSION = "bloghead"
@@ -50,36 +50,15 @@ def debounce(seconds: float, func):
 def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
     """
     Whenever djot content changes, update the preview panel accordingly.
-
-    Since shelling out to `djot` cli takes some non-negligible time, it's done in
-    a separate daemon thread which consumes tasks from a queue, does djot-to-html
-    conversion, then emits a custom Qt signal to update the preview widget.
-
-    The input queue is also debounced to avoid unnecessary work.
     """
-    input_q = Queue()
-
-    # Qt signals can only be emitted by a QObject-derived class:
-    class PreviewSignals(QObject):
-        result = Signal(str)
-
-    signals = PreviewSignals()
-
-    def djot_worker():
-        while True:
-            djot_text = input_q.get()
-            html_text = djot.to_html(djot_text)
-            signals.result.emit(html_text)
-            input_q.task_done()
-
-    signals.result.connect(preview.setHtml)
-    Thread(target=djot_worker, daemon=True).start()
+    djot = djot_ipc.Djot()
 
     def put_preview_task():
-        input_q.put(content.toPlainText())
+        input = content.toPlainText()
+        output = djot.to_html(input)
+        preview.setHtml(output)
 
-    content.textChanged.connect(debounce(0.1, put_preview_task))
-    return put_preview_task
+    content.textChanged.connect(put_preview_task)
 
 
 class MainWindow(QMainWindow):
@@ -176,9 +155,7 @@ class MainWindow(QMainWindow):
         )
         right.editor.addWidget(right.editor.preview, 1, 1)
 
-        self.update_preview_immediately = autoupdate_preview(
-            right.editor.content, right.editor.preview
-        )
+        autoupdate_preview(right.editor.content, right.editor.preview)
 
         widget = QWidget()
         self.setCentralWidget(widget)
@@ -324,13 +301,7 @@ class MainWindow(QMainWindow):
 
         self.right.form.title.setText(self.article.title)
         self.right.form.slug.setText(self.article.slug)
-
-        # Here we want to update preview immediately, so let's temporarily
-        # disable the debounced textChanged signal handler to avoid duplicate work.
-        self.right.editor.content.blockSignals(True)
         self.right.editor.content.setPlainText(self.article.content)
-        self.right.editor.content.blockSignals(False)
-        self.update_preview_immediately()
 
         self.right.setEnabled(True)
         self.statusBar().showMessage(f"Selected article: {self.article.title}")
