@@ -35,19 +35,16 @@ from .persistence import Blog
 FILE_EXTENSION = "bloghead"
 
 
-def debounce(seconds: float):
-    def decorator(func):
-        timer = Timer(seconds, lambda: None)
+def debounce(seconds: float, func):
+    timer = Timer(seconds, lambda: None)
 
-        def inner(*args, **kwargs):
-            nonlocal timer
-            timer.cancel()
-            timer = Timer(seconds, func, args, kwargs)
-            timer.start()
+    def inner(*args, **kwargs):
+        nonlocal timer
+        timer.cancel()
+        timer = Timer(seconds, func, args, kwargs)
+        timer.start()
 
-        return inner
-
-    return decorator
+    return inner
 
 
 def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
@@ -73,17 +70,16 @@ def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
             djot_text = input_q.get()
             html_text = djot.to_html(djot_text)
             signals.result.emit(html_text)
-            print(html_text)
             input_q.task_done()
 
     signals.result.connect(preview.setHtml)
     Thread(target=djot_worker, daemon=True).start()
 
-    @debounce(0.2)
-    def on_content_change():
+    def put_preview_task():
         input_q.put(content.toPlainText())
 
-    content.textChanged.connect(on_content_change)
+    content.textChanged.connect(debounce(0.1, put_preview_task))
+    return put_preview_task
 
 
 class MainWindow(QMainWindow):
@@ -150,18 +146,19 @@ class MainWindow(QMainWindow):
         )
 
         # Right block: article editor
-        right = QVBoxLayout()
+        right = QWidget()
+        right.setLayout(QVBoxLayout())
         self.right = right
 
         right.form = QFormLayout()
-        right.addLayout(right.form)
+        right.layout().addLayout(right.form)
         right.form.title = QLineEdit()
         right.form.addRow("Title:", right.form.title)
         right.form.slug = QLineEdit()
         right.form.addRow("Slug:", right.form.slug)
 
         right.editor = QGridLayout()
-        right.addLayout(right.editor)
+        right.layout().addLayout(right.editor)
 
         right.editor.buttons = QHBoxLayout()
         right.editor.addLayout(right.editor.buttons, 0, 0)
@@ -179,14 +176,16 @@ class MainWindow(QMainWindow):
         )
         right.editor.addWidget(right.editor.preview, 1, 1)
 
-        autoupdate_preview(right.editor.content, right.editor.preview)
+        self.update_preview_immediately = autoupdate_preview(
+            right.editor.content, right.editor.preview
+        )
 
         widget = QWidget()
         self.setCentralWidget(widget)
         layout = QHBoxLayout()
         widget.setLayout(layout)
         layout.addLayout(left)
-        layout.addLayout(right, stretch=1)
+        layout.addWidget(right, stretch=1)
         widget.setDisabled(True)
 
         # "Table stakes" actions e.g. New, Open, Save, Quit:
@@ -316,6 +315,7 @@ class MainWindow(QMainWindow):
             page.setText(0, title)
             page.article_id = id
 
+        self.right.setEnabled(False)
         self.centralWidget().setEnabled(True)
         self.blog = blog
 
@@ -324,8 +324,15 @@ class MainWindow(QMainWindow):
 
         self.right.form.title.setText(self.article.title)
         self.right.form.slug.setText(self.article.slug)
-        self.right.editor.content.setPlainText(self.article.content)
 
+        # Here we want to update preview immediately, so let's temporarily
+        # disable the debounced textChanged signal handler to avoid duplicate work.
+        self.right.editor.content.blockSignals(True)
+        self.right.editor.content.setPlainText(self.article.content)
+        self.right.editor.content.blockSignals(False)
+        self.update_preview_immediately()
+
+        self.right.setEnabled(True)
         self.statusBar().showMessage(f"Selected article: {self.article.title}")
 
 
