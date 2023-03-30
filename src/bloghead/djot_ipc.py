@@ -1,9 +1,6 @@
-import socket
 import subprocess
 
-HEADER_SIZE = 4
-ENDIANNESS = "little"
-SIGNED = False
+MSG_DELIMITER = b"\xFF"
 
 
 class Djot:
@@ -15,9 +12,8 @@ class Djot:
         djot = Djot()
         html = djot.to_html('_and the pirate on the boat_')
 
-    Here I'm implementing a simple message boundary protocol:
-    Each message starts with a 4-byte integer (little endian, unsigned) header
-    which is the length (in bytes) of said message.
+    Each message terminates with a 0xFF byte.
+    Because this byte does not appear in valid UTF-8, it's a safe delimiter.
     """
 
     def __init__(self):
@@ -25,59 +21,25 @@ class Djot:
             ["node", "src/djot.server.js"],  # TODO don't hardcode js path
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
+            bufsize=0,
         )
-        self._leftover = b""
+        self.buffer = b""
 
     def __del__(self):
         self.proc.kill()
 
     def to_html(self, src: str):
-        self._write(src)
-        return self._read()
-
-    def _write(self, body: str):
-        header = len(body).to_bytes(HEADER_SIZE, ENDIANNESS, signed=SIGNED)
-        self.proc.stdin.write(header + body.encode())
+        # Write to nodejs proc:
+        self.proc.stdin.write(src.encode())
+        self.proc.stdin.write(MSG_DELIMITER)
         self.proc.stdin.flush()
 
-    def _read(self) -> str:
-        header = self._leftover
-        body = b""
-
-        # Header loop
-        while True:
-            if len(header) >= HEADER_SIZE:
-                body = header[HEADER_SIZE:]
-                header = header[:HEADER_SIZE]
-                break
-
-            chunk = self.proc.stdout.read(HEADER_SIZE)
-            if not chunk:
-                raise Exception("header: not enough data")
-
-            print("header chunk:", chunk)
-            header += chunk
-
-        body_size = int.from_bytes(header, ENDIANNESS, signed=SIGNED)
-        print("Body size:", body_size)
-
-        # Body loop
-        bufsize = min(4096, body_size)
-        self._leftover = b""
-        while True:
-            if len(body) >= body_size:
-                self._leftover = body[body_size:]
-                body = body[:body_size]
-                break
-
-            chunk = self.proc.stdout.read(bufsize)
-            if not chunk:
-                raise Exception("body: connection closed")
-
-            print("body chunk:", chunk)
-            body += chunk
-
-        return body.decode()
+        # Read response from it:
+        while (end_index := self.buffer.find(MSG_DELIMITER)) == -1:
+            self.buffer += self.proc.stdout.read(4096)
+        resp = self.buffer[:end_index]
+        self.buffer = self.buffer[end_index + 1 :]
+        return resp.decode()
 
 
 if __name__ == "__main__":

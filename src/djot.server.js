@@ -1,20 +1,38 @@
 // TODO: no hardcoded file paths plz
-let djot = require("./vendored/djot/djot.js");
+const djot = require("./vendored/djot/djot.js");
 
-let header = [];
-let body = [];
+let buffer = new Uint8Array();
+const MSG_DELIMITER = 255; // 0xFF which doesn't appear in valid UTF-8
+const END = new Uint8Array([MSG_DELIMITER]);
 
-process.stdin.on("data", (buffer) => {
-  // TODO: loop to read input data in chunks
-  let inputSize = buffer.readInt32LE();
-  let input = buffer.toString("utf8", 4, 4 + inputSize);
-  let output = djot.renderHTML(djot.parse(input));
-  let outputBytes = new TextEncoder().encode(output);
+process.stdin.on("data", (chunk) => {
+  buffer = concatTypedArray(buffer, chunk);
 
-  // make a Buffer to utilize writeInt32LE():
-  let outputHeaderBuf = Buffer.alloc(4);
-  outputHeaderBuf.writeInt32LE(outputBytes.length);
+  // Loop here to handle case where multiple messages come in 1 chunk
+  while (true) {
+    const endIndex = buffer.indexOf(MSG_DELIMITER);
 
-  process.stdout.write(outputHeaderBuf);
-  process.stdout.write(outputBytes);
+    if (endIndex === -1) {
+      return;
+    }
+
+    const msg = buffer.subarray(0, endIndex);
+    buffer = buffer.subarray(endIndex + 1);
+    handleMessage(msg);
+  }
 });
+
+function concatTypedArray(former, latter) {
+  const result = new Uint8Array(former.length + latter.length);
+  result.set(former);
+  result.set(latter, former.length);
+  return result;
+}
+
+function handleMessage(msg) {
+  const input = new TextDecoder().decode(msg);
+  const output = djot.renderHTML(djot.parse(input));
+  const outputBytes = new TextEncoder().encode(output);
+  process.stdout.write(outputBytes);
+  process.stdout.write(END);
+}
