@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bloghead"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Nhân <hi@imnhan.com>"]
 license = "GPL-3.0-only"
@@ -11,9 +11,10 @@ include = ["src/bloghead/*.js"]
 bloghead = "bloghead:start"
 
 [tool.poetry.dependencies]
-# Can't do python ^3.10 because pyside2 doesn't support 3.11 for some reason.
+# Must be at least python 3.9 because of importlib.resources.files().
+# Can't do python>=3.11 because pyside2 doesn't support 3.11 for some reason.
 # Maybe someday kde will fully support qt6 and we'll be able to use pyside6.
-python = "~3.10"
+python = "^3.9,<3.11"
 pyside2 = "^5.15"
 peewee = "^3.16"
 
