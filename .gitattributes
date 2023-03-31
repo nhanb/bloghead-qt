@@ -1,0 +1,2 @@
+src/js/vendored/** linguist-vendored
+src/bloghead/*.dist.js linguist-vendored

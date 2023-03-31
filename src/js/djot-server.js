@@ -1,6 +1,6 @@
-// TODO: no hardcoded file paths plz
-const djot = require("./vendored/djot/djot.js");
-
+// Assumes this script is prepended with the djot.js dist file.
+// See Makefile for details.
+const djot = module.exports;
 let buffer = new Uint8Array();
 const MSG_DELIMITER = 255; // 0xFF which doesn't appear in valid UTF-8
 const END = new Uint8Array([MSG_DELIMITER]);

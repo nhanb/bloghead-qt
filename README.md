@@ -7,4 +7,4 @@ time as a proper Qt application. Nothing but the mockup UI has been done yet.
 
 # Dependencies
 
-Assumes [`djot`](https://github.com/jgm/djot.js) available in $PATH.
+Assumes nodejs (command `node`) is available in $PATH.

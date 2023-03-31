@@ -18,10 +18,10 @@ class Djot:
 
     def __init__(self):
         self.proc = subprocess.Popen(
-            ["node", "src/djot.server.js"],  # TODO don't hardcode js path
+            ["node", "src/bloghead/djot-server.dist.js"],  # TODO don't hardcode js path
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            bufsize=0,
+            bufsize=0,  # avoids blocking proc.stdout.read(n)
         )
         self.buffer = b""
 

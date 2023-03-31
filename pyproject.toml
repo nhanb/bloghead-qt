@@ -5,7 +5,7 @@ description = ""
 authors = ["Nhân <hi@imnhan.com>"]
 license = "GPL-3.0-only"
 readme = "README.md"
-include = ["src/vendored/djot/*"]
+include = ["src/bloghead/*.js"]
 
 [tool.poetry.scripts]
 bloghead = "bloghead:start"
