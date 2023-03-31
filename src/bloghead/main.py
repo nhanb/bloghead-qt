@@ -1,10 +1,7 @@
 import argparse
 import sys
 from pathlib import Path
-from queue import Queue
-from threading import Thread, Timer
 
-from PySide2.QtCore import QObject, Signal
 from PySide2.QtGui import QIcon, QKeySequence
 from PySide2.QtWidgets import (
     QAction,
@@ -33,18 +30,6 @@ from . import djot_ipc
 from .persistence import Blog
 
 FILE_EXTENSION = "bloghead"
-
-
-def debounce(seconds: float, func):
-    timer = Timer(seconds, lambda: None)
-
-    def inner(*args, **kwargs):
-        nonlocal timer
-        timer.cancel()
-        timer = Timer(seconds, func, args, kwargs)
-        timer.start()
-
-    return inner
 
 
 def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
