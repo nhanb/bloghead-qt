@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bloghead"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Nhân <hi@imnhan.com>"]
 license = "GPL-3.0-only"

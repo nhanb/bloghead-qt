@@ -45,3 +45,10 @@ class Blog:
 
     def list_posts(self) -> list[tuple[int, str]]:
         return [(post.id, post.title) for post in Post.select(Post.id, Post.title)]
+
+    def save_article(self, id, *, title, slug, content):
+        art = Article.get(Article.id == id)
+        art.title = title
+        art.slug = slug
+        art.content = content
+        art.save()

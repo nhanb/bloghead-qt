@@ -167,6 +167,8 @@ class MainWindow(QMainWindow):
             enabled=False,
         )
         save_action.setShortcut(QKeySequence.Save)
+        save_action.triggered.connect(self.action_save)
+        self.save_action = save_action
 
         save_as_action = QAction(
             "Save &As...",
@@ -175,6 +177,8 @@ class MainWindow(QMainWindow):
             enabled=False,
         )
         save_as_action.setShortcut(QKeySequence.SaveAs)
+        save_as_action.triggered.connect(self.action_save_as)
+        self.save_as_action = save_as_action
 
         quit_action = QAction("&Quit", self, icon=QIcon(":/icons/application-exit"))
         quit_action.triggered.connect(quit_func)
@@ -277,6 +281,8 @@ class MainWindow(QMainWindow):
             page.setText(0, title)
             page.article_id = id
 
+        self.save_action.setEnabled(True)
+        self.save_as_action.setEnabled(True)
         self.right.setEnabled(False)
         self.centralWidget().setEnabled(True)
         self.blog = blog
@@ -290,6 +296,16 @@ class MainWindow(QMainWindow):
 
         self.right.setEnabled(True)
         self.statusBar().showMessage(f"Selected article: {self.article.title}")
+
+    def action_save(self):
+        title = self.right.form.title.text()
+        slug = self.right.form.slug.text()
+        content = self.right.editor.content.toPlainText()
+        self.blog.save_article(self.article.id, title=title, slug=slug, content=content)
+        self.statusBar().showMessage(f"Saved {self.blog.path}", 5000)
+
+    def action_save_as(self):
+        print("save as")
 
 
 def start():
