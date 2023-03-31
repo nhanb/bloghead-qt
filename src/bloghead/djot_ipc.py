@@ -1,4 +1,5 @@
 import subprocess
+from importlib.resources import read_text
 
 MSG_DELIMITER = b"\xFF"
 
@@ -17,8 +18,9 @@ class Djot:
     """
 
     def __init__(self):
+        js = read_text("bloghead", "djot-server.dist.js")
         self.proc = subprocess.Popen(
-            ["node", "src/bloghead/djot-server.dist.js"],  # TODO don't hardcode js path
+            ["node", "-e", js],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             bufsize=0,  # avoids blocking proc.stdout.read(n)
