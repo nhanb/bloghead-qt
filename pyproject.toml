@@ -11,13 +11,15 @@ include = ["src/bloghead/*.js"]
 bloghead = "bloghead:start"
 
 [tool.poetry.dependencies]
+# Can't do python ^3.10 because pyside2 doesn't support 3.11 for some reason.
+# Maybe someday kde will fully support qt6 and we'll be able to use pyside6.
 python = "~3.10"
-pyside2 = "^5.15.2.1"
-peewee = "^3.16.0"
+pyside2 = "^5.15"
+peewee = "^3.16"
 
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.12.0"
+ipdb = "*"
 
 [build-system]
 requires = ["poetry-core"]
