@@ -22,7 +22,7 @@ for seed in seeds:
     id, slug, _ = seed.name.split(".")
     with open(seed, "r") as sf:
         draft, article_type, title, content = sf.read().strip().split("\n", maxsplit=3)
-    article = blog.create_article(
+    blog.create_article(
         id=int(id),
         slug=slug,
         title=title,

@@ -1,1 +1,1 @@
-from .common import Blog  # noqa
+from .common import Article, Blog  # noqa

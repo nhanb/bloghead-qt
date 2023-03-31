@@ -35,6 +35,8 @@ create table article (
     is_draft boolean not null default true,
     is_page boolean not null default false
 );
+create view post as select * from article where is_page = false order by id desc;
+create view page as select * from article where is_page = true order by id desc;
 
 create table attachment (
     id integer primary key,

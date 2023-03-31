@@ -16,7 +16,6 @@ bloghead = "bloghead:start"
 # Maybe someday kde will fully support qt6 and we'll be able to use pyside6.
 python = "^3.9,<3.11"
 pyside2 = "^5.15"
-peewee = "^3.16"
 
 
 [tool.poetry.group.dev.dependencies]

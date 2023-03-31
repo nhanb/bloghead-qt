@@ -1,13 +1,28 @@
+import re
+import sqlite3
 from dataclasses import dataclass
+from importlib.resources import files
 from pathlib import Path
 
-import peewee
 
-from . import models
-from .models import Article, Page, Post
+def regexp(expr, item):
+    reg = re.compile(expr)
+    return reg.search(item) is not None
+
+
+def dict_factory(cursor, row):
+    fields = [column[0] for column in cursor.description]
+    return {key: value for key, value in zip(fields, row)}
 
 
 @dataclass(slots=True)
+class Article:
+    id: int
+    slug: str
+    title: str
+    content: str
+
+
 class Blog:
     """
     Provides read/write access to a blog's underlying file on disk.
@@ -15,40 +30,66 @@ class Blog:
     To create new: `blog = Blog(path).init_schema()`
     """
 
-    db: peewee.SqliteDatabase
+    conn: sqlite3.Connection
     path: Path
 
     def __init__(self, path: Path):
         self.path = path
-        self.db = models.DATABASE
-        self.db.init(str(path))
-        self.db.connect()
+        self.conn = sqlite3.connect(path)
+        self.conn.create_function("REGEXP", 2, regexp)
+        self.conn.row_factory = dict_factory
+        self.conn.execute("PRAGMA foreign_keys = ON;")
+        self.conn.execute("PRAGMA busy_timeout = 4000;")
 
     def init_schema(self):
-        self.db.create_tables(models.TABLES)
-        self.db.execute_sql(
-            "create view post as select * from article where is_page = false order by id desc;",
-        )
-        self.db.execute_sql(
-            "create view page as select * from article where is_page = true order by id desc;",
-        )
+        sql = files("bloghead.persistence").joinpath("schema.sql").read_text()
+        self.conn.cursor().executescript(sql)
         return self
 
+    def _execute(self, query, params=None):
+        params = params or []
+        with self.conn:
+            self.conn.execute(query, params)
+
+    def _fetch_one(self, query, params=None):
+        params = params or []
+        with self.conn:
+            cur = self.conn.execute(query, params)
+            return cur.fetchone()
+
+    def _fetch_all(self, query, params=None):
+        params = params or []
+        with self.conn:
+            cur = self.conn.execute(query, params)
+            return cur.fetchall()
+
     def create_article(self, **kwargs) -> int:
-        return Article.insert(**kwargs).execute()
+        """
+        Returns article's id
+        """
+        columns = ",".join(kwargs.keys())
+        placeholders = ",".join("?" for _ in range(len(kwargs)))
+        query = f"insert into article({columns}) values({placeholders}) returning id;"
+        params = [val for val in kwargs.values()]
+        return self._fetch_one(query, params)["id"]
 
     def get_article(self, id: int) -> Article:
-        return Article.get(Article.id == id)
+        row = self._fetch_one(
+            "select id, slug, title, content from article where id=?;",
+            [id],
+        )
+        return Article(**row)
 
     def list_pages(self) -> list[tuple[int, str]]:
-        return [(page.id, page.title) for page in Page.select(Page.id, Page.title)]
+        rows = self._fetch_all("select id, title from page;")
+        return [(row["id"], row["title"]) for row in rows]
 
     def list_posts(self) -> list[tuple[int, str]]:
-        return [(post.id, post.title) for post in Post.select(Post.id, Post.title)]
+        rows = self._fetch_all("select id, title from post;")
+        return [(row["id"], row["title"]) for row in rows]
 
     def save_article(self, id, *, title, slug, content):
-        art = Article.get(Article.id == id)
-        art.title = title
-        art.slug = slug
-        art.content = content
-        art.save()
+        self._execute(
+            "update article set title=?, slug=?, content=? where id=?;",
+            [title, slug, content, id],
+        )

@@ -190,17 +190,6 @@ qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
 testing = ["docopt", "pytest (<6.0.0)"]
 
 [[package]]
-name = "peewee"
-version = "3.16.0"
-description = "a little orm"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "peewee-3.16.0.tar.gz", hash = "sha256:1800c0a04962ee99d161c07f5a12fc49549caf5cfcda426a9103e34e37f854ba"},
-]
-
-[[package]]
 name = "pexpect"
 version = "4.8.0"
 description = "Pexpect allows easy control of interactive console applications."
@@ -406,4 +395,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9,<3.11"
-content-hash = "f4a61af897ac4808f366c347ffa4b71d92102550b6288bc3d7e741ff4759ba74"
+content-hash = "8278e753da6c063078b7c6141e981b18a4c8cdd17ba40557d53bd6b06a6dffb1"

@@ -38,12 +38,13 @@ def autoupdate_preview(content: QPlainTextEdit, preview: QTextEdit):
     """
     djot = djot_ipc.Djot()
 
-    def put_preview_task():
+    def update_preview():
         input = content.toPlainText()
         output = djot.to_html(input)
+        # TODO: restore preview's scroll position
         preview.setHtml(output)
 
-    content.textChanged.connect(put_preview_task)
+    content.textChanged.connect(update_preview)
 
 
 class MainWindow(QMainWindow):
