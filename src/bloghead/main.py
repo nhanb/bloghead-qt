@@ -214,11 +214,11 @@ class MainWindow(QMainWindow):
         export_menu.addAction("&Manage...")
         export_menu.setDisabled(True)
 
-        self.statusBar().showMessage("Tip: Open or create a New blog to start")
+        self.status_message("Tip: Open or create a New blog to start")
 
         if file_name and Path(file_name).exists():
             self.set_blog(Path(file_name))
-            self.statusBar().showMessage(f"Opened {file_name}")
+            self.status_message(f"Opened {file_name}")
 
     def action_new(self):
         path, _ = QFileDialog.getSaveFileName(
@@ -228,7 +228,7 @@ class MainWindow(QMainWindow):
             dir=".",
         )
         if not path:
-            self.statusBar().showMessage("Aborted new blog creation")
+            self.status_message("Aborted new blog creation")
             return
 
         ext = f".{FILE_EXTENSION}"
@@ -242,7 +242,7 @@ class MainWindow(QMainWindow):
 
         self.set_blog(path)
         self.blog.init_schema()
-        self.statusBar().showMessage(f"Created {path}")
+        self.status_message(f"Created {path}")
 
     def action_open(self):
         path, _ = QFileDialog.getOpenFileName(
@@ -252,11 +252,11 @@ class MainWindow(QMainWindow):
             dir=".",
         )
         if not path:
-            self.statusBar().showMessage("Aborted open blog")
+            self.status_message("Aborted open blog")
             return
 
         self.set_blog(Path(path))
-        self.statusBar().showMessage(f"Opened {path}")
+        self.status_message(f"Opened {path}")
 
     def set_blog(self, path: Path):
         blog = Blog(path)
@@ -296,17 +296,20 @@ class MainWindow(QMainWindow):
         self.right.editor.content.setPlainText(self.article.content)
 
         self.right.setEnabled(True)
-        self.statusBar().showMessage(f"Selected article: {self.article.title}")
+        self.status_message(f"Selected article: {self.article.title}")
 
     def action_save(self):
         title = self.right.form.title.text()
         slug = self.right.form.slug.text()
         content = self.right.editor.content.toPlainText()
         self.blog.save_article(self.article.id, title=title, slug=slug, content=content)
-        self.statusBar().showMessage(f"Saved {self.blog.path}", 5000)
+        self.status_message(f"Saved {self.blog.path}")
 
     def action_save_as(self):
         print("save as")
+
+    def status_message(self, msg):
+        self.statusBar().showMessage(msg, 4000)
 
 
 def start():
