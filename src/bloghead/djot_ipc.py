@@ -32,8 +32,7 @@ class Djot:
 
     def to_html(self, src: str):
         # Write to nodejs proc:
-        self.proc.stdin.write(src.encode())
-        self.proc.stdin.write(MSG_DELIMITER)
+        self.proc.stdin.write(src.encode() + MSG_DELIMITER)
         self.proc.stdin.flush()
 
         # Read response from it:

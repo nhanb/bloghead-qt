@@ -33,6 +33,5 @@ function handleMessage(msg) {
   const input = new TextDecoder().decode(msg);
   const output = djot.renderHTML(djot.parse(input));
   const outputBytes = new TextEncoder().encode(output);
-  process.stdout.write(outputBytes);
-  process.stdout.write(END);
+  process.stdout.write(concatTypedArray(outputBytes, END));
 }
